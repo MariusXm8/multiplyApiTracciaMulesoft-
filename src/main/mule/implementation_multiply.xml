@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<flow name="multiplyFlow" doc:id="d4d0a3cb-20f1-4183-86d9-6e7e747b18d1" >
+		<set-variable value='#[payload]' doc:name="Prendo il Body" doc:id="a9194a8c-a54d-4dcc-8ad9-23db77ee25c4" variableName="int"/>
+		<ee:transform doc:name="payload to Xml" doc:id="01acbdfb-7583-4c3e-aa10-7fe56952b69e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://tempuri.org/
+---
+{
+	ns0#Multiply: {
+		ns0#intA: vars.int[0] default 0 ,
+		ns0#intB: vars.int[1] default 0
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume" doc:id="d489231e-81c2-49e8-ba91-d9491ae02a05" config-ref="Web_Service_Consumer_Config" operation="Multiply"/>
+		<ee:transform doc:name="xml to json" doc:id="134555af-1ee0-4f28-8d44-41eb2d8706e6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+ns ns0 http://tempuri.org/
+
+output application/json
+---
+payload.body.ns0#MultiplyResponse.ns0#MultiplyResult]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

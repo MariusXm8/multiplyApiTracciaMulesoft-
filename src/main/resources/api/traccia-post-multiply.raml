@@ -1,0 +1,15 @@
+#%RAML 1.0
+title: Traccia Post Multiply
+
+/Multiply:
+  post:
+    body:
+      application/json:
+        example:
+          input: !include /esempi/exampleInput.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              output: !include /esempi/exampleOutput.raml
